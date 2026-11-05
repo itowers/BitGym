@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BitGym</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>BitGym</h1>
+    <nav>
+      <button data-tab="hoje" class="on">Hoje</button>
+      <button data-tab="exercicios">Exercícios</button>
+      <button data-tab="ajustes">Ajustes</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="hoje"></section>
+    <section id="exercicios" hidden></section>
+    <section id="ajustes" hidden></section>
+  </main>
+
+  <dialog id="dlg"></dialog>
+  <div id="toast" role="status" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
