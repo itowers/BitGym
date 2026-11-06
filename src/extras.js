@@ -149,5 +149,5 @@ document.addEventListener('click',ev=>{
  if(a==='tstart'){iniciarTreino();refreshTimerUI();return;}
  if(a==='tplay'){iniciarExercicio(b.dataset.id);refreshTimerUI();return;}
  if(a==='tstop'){pararExercicio();refreshTimerUI();return;}
- if(a==='tfim'){if(confirm('Finalizar o treino?')){finalizarTreino();refreshTimerUI();}return;}});
+ if(a==='tfim'){finalizarTreino();refreshTimerUI();return;}});
 setInterval(tick,1000);
