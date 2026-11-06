@@ -84,7 +84,7 @@ document.addEventListener('click',ev=>{
  if(e){const k=e.dataset.e;state.eq.has(k)?state.eq.delete(k):state.eq.add(k);chips();renderList();}});
 $('#q').addEventListener('input',e=>{state.q=e.target.value.trim().toLowerCase();renderList();});
 /* ---------- storage */
-function normStore(d){const s={log:{},fav:[],plan:null};if(d&&typeof d==='object'){if(d.log&&typeof d.log==='object')s.log=d.log;if(Array.isArray(d.fav))s.fav=d.fav;if(d.plan&&Array.isArray(d.plan.days))s.plan=d.plan;if(d.dbcfg&&typeof d.dbcfg.bar==='number'&&Array.isArray(d.dbcfg.plates))s.dbcfg=d.dbcfg;}return s;}
+function normStore(d){const s={log:{},fav:[],plan:null};if(d&&typeof d==='object'){if(d.log&&typeof d.log==='object')s.log=d.log;if(Array.isArray(d.fav))s.fav=d.fav;if(d.plan&&Array.isArray(d.plan.days))s.plan=d.plan;if(d.dbcfg&&typeof d.dbcfg.bar==='number'&&Array.isArray(d.dbcfg.plates))s.dbcfg=d.dbcfg;if(d.gender==='homem'||d.gender==='mulher')s.gender=d.gender;if(d.sessao&&typeof d.sessao.ini==='number')s.sessao=d.sessao;if(Array.isArray(d.treinos))s.treinos=d.treinos;if(Array.isArray(d.tempos))s.tempos=d.tempos;}return s;}
 async function initStore(){
  try{const l=localStorage.getItem('exercicios-v1');if(l)store=normStore(JSON.parse(l));}catch(e){}
  saveFn=()=>{try{localStorage.setItem('exercicios-v1',JSON.stringify(store));}catch(e){}};
@@ -95,14 +95,14 @@ async function initStore(){
    let d=snap&&(typeof snap.data==='function'?snap.data():(snap.data||snap));
    if(d&&(d.log||d.fav||d.plan)){const r=normStore(d);
     for(const k in store.log){if(!r.log[k])r.log[k]=store.log[k];}
-    if(!r.plan&&store.plan)r.plan=store.plan;if(!r.dbcfg&&store.dbcfg)r.dbcfg=store.dbcfg;
+    if(!r.plan&&store.plan)r.plan=store.plan;if(!r.dbcfg&&store.dbcfg)r.dbcfg=store.dbcfg;if(!r.gender&&store.gender)r.gender=store.gender;if(!r.sessao&&store.sessao)r.sessao=store.sessao;if(!r.treinos&&store.treinos)r.treinos=store.treinos;if(!r.tempos&&store.tempos)r.tempos=store.tempos;
     store=r;}
    saveFn=()=>{try{localStorage.setItem('exercicios-v1',JSON.stringify(store));}catch(e){}ref.set(store).catch(()=>{});};
    saveFn();$('#sync').textContent='Salvo na sua conta';}
  }catch(e){}
  if(!$('#sync').textContent)$('#sync').textContent='Salvo neste navegador';
- route();}
-function save(){if(saveFn)saveFn();}
+ applyGender();renderList();route();}
+function save(){if(saveFn)saveFn();if(typeof onSave==='function')onSave();}
 /* ---------- detail */
 let anim=null;
 const VIEWS=['v-home','v-detail','v-plano','v-setup','v-dia'];
@@ -115,18 +115,20 @@ function openEx(id){
  const last=lastSession(id);
  v.innerHTML='<button class="back" id="bk">← Voltar</button>'+
  '<h2>'+e.n+'</h2><p class="grp">'+GN[e.g]+' · '+e.sets+'</p>'+
- '<canvas id="cv"></canvas>'+
+ '<div class="cvw"><canvas id="cv"></canvas>'+gripBadge(e)+'</div>'+
  '<div class="ctl"><button id="pp">❚❚ Pausar</button><button id="rt">↻ Girar</button><button id="sp">Velocidade: normal</button></div>'+
  '<div class="phase" id="ph"></div>'+
  '<div class="leg"><span><i class="sw r"></i>Músculo principal</span><span><i class="sw o"></i>Auxiliar</span></div>'+
- '<div class="tags">'+e.prim.map(m=>'<span class="t r">'+MUS[m]+'</span>').join('')+e.sec.map(m=>'<span class="t o">'+MUS[m]+'</span>').join('')+'</div>'+
+ '<div class="tags">'+e.prim.map(m=>'<span class="t r">'+MUS[m]+'</span>').join('')+e.sec.map(m=>'<span class="t o">'+MUS[m]+'</span>').join('')+'</div>'+focoChip(e)+
  (poliaInfo(e)?'<p class="pol">'+poliaInfo(e).txt+'</p>':'')+(e.space?'<p class="pol sp">Pede espaço livre: faça no sentido do comprimento da sacada.</p>':'')+
  '<div class="tags">'+e.eq.map(q=>'<span class="t">'+EQ[q]+'</span>').join('')+(e.lim?'<span class="t w">Limitado por carga: use tempo lento e unilateral</span>':'')+'</div>'+
  '<h3>Como fazer</h3><p>'+e.c+'</p><h3>Dica</h3><p>'+e.d+'</p>'+
- '<h3>Registrar série</h3><div class="log"><label>'+(poliaInfo(e)?'Peso na pilha (kg)':e.eq.includes('halteres')?'Carga (kg por halter)':'Carga (kg)')+'<input id="kg" type="number" inputmode="decimal" min="0" step="0.5" placeholder="0"></label><label>Repetições<input id="rp" type="number" inputmode="numeric" min="1" step="1" placeholder="10"></label><button id="add" class="pri">+ Adicionar</button></div><p class="err" id="er"></p><p class="muted" id="pl"></p>'+
- '<div id="sets"></div>'+
+ '<h3>Cronômetro</h3><div id="dtimer" class="tc"></div>'+
+ '<h3>Registrar série</h3><div class="log"><label>'+cargaLabel(e,poliaInfo(e))+'<input id="kg" type="number" inputmode="decimal" min="0" step="0.5" placeholder="0"></label><label>Repetições<input id="rp" type="number" inputmode="numeric" min="1" step="1" placeholder="10"></label><button id="add" class="pri">+ Adicionar</button></div><p class="err" id="er"></p><p class="muted" id="pl"></p>'+
+ '<div id="sets"></div><div id="nx"></div>'+
  (last?'<p class="muted">Último treino ('+fmtD(last.d)+'): '+last.s.map(x=>x.kg+'kg×'+x.r).join(', ')+'</p>':'')+
  '<div id="hist"></div>';
+ exOpened(e);
  const cv=$('#cv');let view=defView(e),i=0,playing=true,ms=115;
  const draw=()=>{paintTo(e,cv,SEQ[i],view,HOT[i]);$('#ph').textContent=PH[i];};
  draw();
@@ -246,7 +248,7 @@ function renderPlano(){
  const mx=Math.max(1,...keys.map(k=>days[k]||0));
  h+='<h3>Hoje</h3><div class="stats"><div><b>'+sets+'</b><span>séries</span></div><div><b>'+exs+'</b><span>exercícios</span></div><div><b>'+Math.round(vol).toLocaleString('pt-BR')+'</b><span>kg de volume</span></div></div>'+
  '<h3>Últimos 14 dias</h3><div class="bars">'+keys.map(k=>'<i title="'+fmtD(k)+'" style="height:'+Math.max(4,Math.round((days[k]||0)/mx*100))+'%"'+(days[k]?'':' class="z"')+'></i>').join('')+'</div><p class="muted">Volume = carga × repetições, somado por dia.</p>';
- v.innerHTML=h;}
+ v.innerHTML=sessionCardHTML()+h+corpoHTML();tick();}
 function renderDia(i){
  const p=store.plan,d=p&&p.days[i];if(!d){location.hash='plano';return;}
  const v=$('#v-dia');
@@ -270,6 +272,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
 /* ---------- route */
 let lastTab='plan';
 function route(){
+ renderBar();
  const h=location.hash.slice(1)||'plano';
  let cat=h==='catalogo'||h==='home';if(h.startsWith('ex-'))cat=lastTab==='cat';else lastTab=cat?'cat':'plan';
  document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')===(cat?'#catalogo':'#plano')));

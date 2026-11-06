@@ -70,6 +70,14 @@ button.edit{width:100%;margin:4px 0 6px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 16px}.stats div{background:#1d1a30;border:2px solid #3b3560;padding:10px;text-align:center}
 .stats b{display:block;font:13px 'Press Start 2P',monospace;color:#3fd0c9;margin-bottom:6px}.stats span{font-size:12px;color:#9a96c0}
 .bars{display:flex;align-items:flex-end;gap:4px;height:90px;border-bottom:2px solid #3b3560;padding-bottom:2px}.bars i{flex:1;background:#3fd0c9;min-height:4px}.bars i.z{background:#2c2748}
+.cvw{position:relative}.hbadge{position:absolute;left:8px;bottom:16px;display:flex;gap:8px;align-items:center;background:rgba(20,18,31,.9);border:2px solid #3b3560;padding:4px 10px 4px 4px}
+.hbadge canvas{width:52px;height:52px;image-rendering:pixelated;background:#2a2c31}.hbadge b{display:block;font-size:12px;color:#fff}.hbadge span{display:block;font-size:11px;color:#9a96c0}
+.tc{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#1d1a30;border:2px solid #3b3560;padding:10px 12px;margin:0 0 10px}
+.tc .big{font:13px 'Press Start 2P',monospace;color:#ffd45a;margin-left:6px}
+.tbar{position:fixed;left:0;right:0;bottom:calc(50px + env(safe-area-inset-bottom));z-index:9;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#221e3a;border-top:2px solid #3fd0c9;padding:8px 12px;font-size:13px}
+.tbar .hot{color:#ffd45a;font-variant-numeric:tabular-nums}.tbar button{padding:6px 12px;font-size:13px;flex:none}body.hasbar{padding-bottom:140px}
+.fb{margin:8px 0 4px}.fr{margin-bottom:8px}.row2{display:flex;justify-content:space-between;font-size:13px;color:#cfcbf5}.row2 .hi{color:#ffd45a;font-weight:600}
+.fbar{height:8px;background:#2c2748}.fbar i{display:block;height:100%;background:#3fd0c9}
 footer{text-align:center;color:#6f6a96;font-size:12px;padding:8px}
 .nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1730;border-top:3px solid #2c2748;padding-bottom:env(safe-area-inset-bottom)}
 .nav a{flex:1;text-align:center;padding:16px 8px;color:#9a96c0;text-decoration:none;font:10px 'Press Start 2P',monospace}.nav a.on{color:#3fd0c9;background:#221e3a}
@@ -85,9 +93,10 @@ html="""<!DOCTYPE html>
 <section id="v-detail" hidden></section><section id="v-plano" hidden></section><section id="v-setup" hidden></section><section id="v-dia" hidden></section>
 </main>
 <footer id="sync"></footer>
+<div id="tbar" class="tbar" hidden></div>
 <nav class="nav"><a href="#plano">Meu treino</a><a href="#catalogo">Catálogo</a></nav>
 <script>
-"""+open(os.path.join(SRC,'core.js')).read()+"\n"+open(os.path.join(SRC,'data.js')).read()+"\n"+open(os.path.join(SRC,'data2.js')).read()+"\n"+open(os.path.join(SRC,'rm.js')).read()+"\n"+open(os.path.join(SRC,'vec.js')).read()+"\n"+open(os.path.join(SRC,'ui.js')).read()+"""
+"""+open(os.path.join(SRC,'core.js')).read()+"\n"+open(os.path.join(SRC,'data.js')).read()+"\n"+open(os.path.join(SRC,'data2.js')).read()+"\n"+open(os.path.join(SRC,'rm.js')).read()+"\n"+open(os.path.join(SRC,'vec.js')).read()+"\n"+open(os.path.join(SRC,'extras.js')).read()+"\n"+open(os.path.join(SRC,'ui.js')).read()+"""
 </script></body></html>"""
 os.makedirs(DIST,exist_ok=True)
 open(os.path.join(DIST,'index.html'),'w').write(html)

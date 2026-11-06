@@ -16,6 +16,11 @@ halteres de anilha (2 a 24 kg), kettlebell ajustável e elásticos.
   o lado da torre e o modo — uma polia (2:1) ou duas polias ligadas (1:1). No registro, o
   peso da pilha é convertido para a carga real.
 - **Halteres de anilha**: calcula como montar cada halter com as anilhas que você tem.
+- **Corpo do personagem**: em *Meu treino*, escolha Homem ou Mulher; muda as proporções do personagem nas animações.
+- **Pegada da mão**: cada exercício mostra, sobre a animação, a mão em pixel art (pronada, supinada ou neutra).
+- **Foco dentro do grupo**: cada exercício tem um foco (por exemplo, peitoral superior, cabeça longa do tríceps, deltoide lateral).
+- **Próximo exercício**: depois de registrar séries, o app mostra o músculo trabalhado, as séries por foco no dia (meta de 6) e sugere exercícios que focam o que falta. Quando o grupo fecha a meta, sugere outro grupo.
+- **Cronômetro**: *Iniciar treino* conta o tempo total. Em cada exercício, ▶ Iniciar exercício cronometra a execução; ■ Parei salva a duração e começa a contar o descanso; ao iniciar o próximo exercício, o descanso é registrado. A barra do cronômetro fica visível em todas as telas.
 
 ## Estrutura
 
@@ -24,6 +29,7 @@ src/
   core.js         esqueleto, poses, cinemática inversa e modelo voxel dos aparelhos (MC-1000)
   data.js         grupos, equipamentos e os exercícios originais (E0)
   data2.js        catálogo completo (E): reaproveita E0 e define os demais
+  extras.js       corpo (homem/mulher), pegada da mão, foco muscular, próximo exercício e cronômetro
   rm.js           formas 3D (SDF) do corpo e dos acessórios: halter, kettlebell, elástico, cabos
   vec.js          desenho vetorial 2D e conversão para pixel art (paleta fixa, 100 px)
   ui.js           interface: catálogo, detalhe, plano de treino, registro e armazenamento
